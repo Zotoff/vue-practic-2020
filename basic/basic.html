@@ -3,57 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/img/logo.png" type="image/png">
+    <link rel="shortcut icon" href="img/logo.png" type="image/png">
     <title>Basic Vue</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        .circle {
+            display: block;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #222222;
+            box-shadow: 1px 2px 15px rgba(0, 0, 0, .5);
+            border-radius: 50%;
+            transition: all .5s ease-in;
+        }
 
+        .red {
+            background: red;
+        }
+
+        .green {
+            background: green;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-md-6 mb-30">
                 <div id="app">
-                    <h1>Basics</h1>
+                    <h1>{{title}}</h1>
                     <p>Hello {{name}}</p>
                     <p>{{sayHello()}}</p>
                     <p>{{isOk ? 'You see me' : 'You dont see me'}}</p>
                     <a v-bind:href="url">{{url}}</a>
-            
+
                     <hr />
                     <h2>Events</h2>
                     <p v-on:mouseover="onHover">Counter: {{counter}}</p>
-                    <button v-on:click="riseCounter" class="btn btn-info">Увеличить счетчик</button>
-                    <butotn v-on:click="riseCounter(5)" class="btn btn-info">Увеличить счетчик на 5</butotn>
+                    <button v-on:click="riseCounter(1, $event)" class="btn btn-info">Увеличить счетчик</button>
+                    <button v-on:click="riseCounter(5, $event)" class="btn btn-info">Увеличить счетчик на 5</button>
+                    <hr />
+                    <!--Модификаторы пользовательских событий-->
+                    <a href="http://yandex.ru" target="_blank" v-on:click.prevent="">Yandex</a>
+                    <h2 v-on:mousemove="handleMouseMove">X: {{x}} / Y: {{y}}
+                        <span v-on:mousemove.stop="">Не изменять</span>
+                    </h2>
+                    <hr />
+
+                    <!--Модификаторы событий клавиатуры-->
+                    <input type="text" v-on:keyup.enter="alertValue" placeholder="press Enter" />
+                    <hr />
+                    <!--Модель для работы с формами-->
+                    <input v-model.lazy="inputValue" placeholder="Начните вводить текст" />
+                    <p><strong>Введенные значения: </strong>{{inputValue}}</p>
+                    <!--Инлайновое управление классами-->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12 mb-5 d-flex align-items-center justify-content-start">
+                            <div class="circle" @click="isActive = !isActive"
+                                :class="{'red': isActive, 'green': !isActive}">
+                            </div>
+                            <div class="col d-flex align-items-center justify-content-start">
+                                <div class="circle mr-4" :class="color"></div>
+                                <input type="text" v-model="color" />
+                            </div>
+                        </div>
+                        <hr />
+                        <!--Инлайновое управление стилями-->
+                        <div class="row">
+                            <div class="col-md-12 mb-5 d-flex align-items-center justify-content-between">
+                                <div class="circle mr-5"
+                                    :style="circleClasses">
+                                </div>
+                                <div class="inputs d-flex align-items-center justify-content-start flex-wrap">
+                                    <input type="text" class="mb-5" v-model="colored" placeholder="Цвет" style="width: 100%" />
+                                    <input type="range" v-model="height" placeholder="Габариты" style="width: 100%" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 v-if="isVisible">I am visible</h3>
+                            <h3 v-else>No, i am visible</h3>
+                            <button @click="isVisible = !isVisible">Toggler</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 v-if="type === 'a'">A</h3>
+                            <h3 v-else-if="type === 'b'">B</h3>
+                            <h3 v-else>Type C</h3>
+                            <input v-model="type" placeholder="Enter type"/>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row mb-30">
+                        <div class="col-md-12">
+                            <ul>
+                                <li v-for="person in people">
+                                    {{person.name}} - <b>{{person.age}}</b>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li v-for="num of 4">
+                                    {{num}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div id="app2">
+                    <h2 ref="heading">{{title}}</h2>
+                    <button @click="changeTitle">ChangeTitle</button>
+                </div>
+            </div>
+            </div>
         </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                name: 'Paul',
-                isOk: true,
-                url: 'http://google.com',
-                counter: 0
-            },
-            methods: {
-                sayHello: function() {
-                    return "Hello world";
+
+        <script type="text/javascript" src="js/vue.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+        </script>
+        <script>
+            var vue1 = new Vue({
+                el: '#app',
+                data: {
+                    title: 'I am from Vue1',
+                    name: 'Paul',
+                    isOk: true,
+                    url: 'http://google.com',
+                    counter: 0,
+                    x: 0,
+                    y: 0,
+                    inputValue: '',
+                    isActive: false,
+                    color: '',
+                    colored: '',
+                    height: 50,
+                    isVisible: true,
+                    type: '',
+                    people: [
+                        { name: 'Ivan', age: 20 },
+                        { name: 'Pavel', age: 33 }
+                    ]
                 },
-                riseCounter: function(counter) {
-                    this.counter++;
+                computed: {
+                    circleClasses: function() {
+                        return {
+                            'background': this.colored, 'height': this.height + 'px', 'width': this.height + 'px'
+                        }
+                    }
                 },
-                onHover: function(e) {
-                    e.target.style.color = 'red'
+                methods: {
+                    sayHello: function () {
+                        return "Hello world";
+                    },
+                    riseCounter: function (num, event) {
+                        this.counter += num;
+                        if (num === 1) {
+                            event.target.style.backgroundColor = 'blue'
+                        } else if (num === 5) {
+                            event.target.style.backgroundColor = 'green'
+                        }
+                    },
+                    onHover: function (e) {
+                        e.target.style.color = 'red'
+                    },
+                    handleMouseMove: function (event) {
+                        this.x = event.clientX;
+                        this.y = event.clientY;
+                    },
+                    alertValue: function (e) {
+                        alert(event.target.value)
+                    }
+                },
+                watch: {
+                    counter: function() {
+                        console.log('Counter changed' + this.counter)
+                    }
                 }
-            }
-        })
-    </script>
+            });
+
+            console.log(vue1);
+
+            new Vue({
+                el: '#app2',
+                data: {
+                    title: 'I am from Vue 2'
+                },
+                methods: {
+                    changeTitle: function() {
+                        vue1.title = 'Changed'
+                        this.$refs.heading.style.color = 'green'
+                    }
+                }
+            })
+        </script>
 </body>
+
 </html>
