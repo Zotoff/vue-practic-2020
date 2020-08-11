@@ -1,18 +1,44 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <app-car></app-car>
+    <h1 v-colored="`green`">{{ carName }}</h1>
+    <h1 v-colored:background.font="`blue`">{{ carName }}</h1>
+    <app-counter></app-counter>
+    <app-car 
+    v-bind:carName="carName" 
+    v-bind:carYear="carYear" 
+    @counterUpdated="counter = $event" 
+    @nameChanged="carName = $event"
+    >
+    </app-car>
+    <hr />
+    <app-filters></app-filters>
+    <hr />
+    <list></list>
   </div>
 </template>
 
 <script>
+
+import Counter from './Counter.vue'
+import Car from './Car.vue'
+import Filters from './Filters'
+import List from './List'
+
 export default {
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      carName: 'Ford from parent',
+      carYear: 2010
     }
+  },
+  components: {
+    appCounter: Counter,
+    appCar: Car,
+    appFilters: Filters,
+    list: List
   }
 }
 </script>

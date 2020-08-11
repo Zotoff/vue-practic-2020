@@ -2,15 +2,37 @@
     <div class="card">
         <h3>Name: {{ carName }}</h3>
         <p>Year: {{ carYear }}</p>
+        <hr />
+        <button @click="changeName">Change Car Name</button>
+        <button @click="updateCounter">Update Counter</button>
     </div>
 </template>
 
 <script>
+
+import { eventEmitter } from './main.js'
+
 export default {
+    props: {
+        carName: {
+            type: String,
+            required: true,
+            default: 'Check'
+        },
+        carYear: Number
+    },
     data() {
         return {
-            carName: 'Ford',
-            carYear: 2020
+        }
+    },
+    methods: {
+        changeName() {
+            this.carName="Mazda",
+            this.$emit('nameChanged', this.carName)
+        },
+        updateCounter() {
+            //this.$emit('counterUpdated', this.counter++)
+            eventEmitter.$emit('counterUpdated')
         }
     }
 }
