@@ -1,29 +1,47 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1 v-colored="`green`">{{ carName }}</h1>
-    <h1 v-colored:background.font="`blue`">{{ carName }}</h1>
-    <app-counter></app-counter>
-    <app-car 
-    v-bind:carName="carName" 
-    v-bind:carYear="carYear" 
-    @counterUpdated="counter = $event" 
-    @nameChanged="carName = $event"
-    >
-    </app-car>
-    <hr />
-    <app-filters></app-filters>
-    <hr />
-    <list></list>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <img src="./assets/logo.png">
+          <h1 v-colored="`green`">{{ carName }}</h1>
+          <h1 v-colored:background.font="`blue`">{{ carName }}</h1>
+          <app-counter></app-counter>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <app-car 
+              v-bind:carName="carName" 
+              v-bind:carYear="carYear" 
+              @counterUpdated="counter = $event" 
+              @nameChanged="carName = $event"
+              >
+              </app-car>
+        </div>
+        <div class="col-md-6">
+          <app-filters></app-filters>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <list></list>
+        </div>
+        <div class="col-md-6">
+          <app-form></app-form>
+        </div>
+      </div>
+    </div>    
   </div>
 </template>
 
 <script>
 
-import Counter from './Counter.vue'
-import Car from './Car.vue'
+import Counter from './Counter'
+import Car from './Car'
 import Filters from './Filters'
 import List from './List'
+import Form from './Form'
 
 export default {
   name: 'app',
@@ -38,7 +56,8 @@ export default {
     appCounter: Counter,
     appCar: Car,
     appFilters: Filters,
-    list: List
+    list: List,
+    appForm: Form
   }
 }
 </script>

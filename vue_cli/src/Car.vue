@@ -1,10 +1,12 @@
 <template>
     <div class="card">
-        <h3>Name: {{ carName }}</h3>
-        <p>Year: {{ carYear }}</p>
-        <hr />
-        <button @click="changeName">Change Car Name</button>
-        <button @click="updateCounter">Update Counter</button>
+        <div class="card-body">
+            <h3>Name: {{ carName }}</h3>
+            <p>Year: {{ carYear }}</p>
+            <hr />
+            <button @click="changeName">Change Car Name</button>
+            <button @click="updateCounter">Update Counter</button>
+        </div>
     </div>
 </template>
 
