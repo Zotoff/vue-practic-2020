@@ -1,40 +1,64 @@
 <template>
-  <div id="app">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-                <div class="card-body">
-                  <form>
-                      <div class="form-group">
-                        <label for="email">Email</label>
-                        <input
-                        class="form-control"
-                        :class="{'is-invalid': $v.email.$error}"
-                        type="email"
-                        v-model="email" @blur="$v.email.$touch"/>
-                        <div class="invalid-feedback">Invalid feedback</div>
-                      </div>
-                  </form>
-                </div>
-            </div>
+  <div id="app" class="row">
+    <div class="col-md-12">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+              <router-link tag="li" class="nav-item" exact active-class="active" to="/">
+                <a class="nav-link">Home</a>
+              </router-link>
+              <router-link tag="li" class="nav-item" active-class="active" to="/cars">
+                <a class="nav-link">Cars</a>
+              </router-link>
+          </ul>
         </div>
+          </nav>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <router-view></router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   data () {
     return {
-      email: ''
+      email: '',
+      password: '',
+      confirm: ''
+    }
+  },
+  methods: {
+    onSubmit () {
+      alert('submit!')
     }
   },
   validations: {
     email: {
-      required: required
+      required: required,
+      email: email,
+      uniqEmail: function (newEmail) {
+        if (newEmail === '') return true
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const value = newEmail !== 'test@mail.ru'
+            resolve(value)
+          }, 1000)
+        })
+      }
+    },
+    password: {
+      minLength: minLength(6)
+    },
+    confirm: {
+      sameAs: sameAs('password')
     }
   }
 }
