@@ -1,11 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../pages/Home'
-import Cars from '../pages/Cars'
 import Car from '../pages/Car'
 import CarInfo from '../pages/CarInfo'
 
 Vue.use(Router)
+
+const Cars = resolve => {
+  require.ensure(['../pages/Cars.vue'], () => {
+    resolve(
+      require('../pages/Cars.vue')
+    )
+  })
+}
 
 export default new Router({
   routes: [
@@ -27,7 +34,11 @@ export default new Router({
         {
           path: 'full',
           component: CarInfo,
-          name: 'carInfo'
+          name: 'carInfo',
+          beforeEnter (to, from, next) {
+            console.log('beforeEnter')
+            next(true)
+          }
         }
       ]
     },
@@ -37,7 +48,7 @@ export default new Router({
     }
   ],
   mode: 'history',
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     }
@@ -50,6 +61,6 @@ export default new Router({
         x: 0,
         y: 700 // задаем координаты скролла
       }
-    } 
+    }
   }
 })

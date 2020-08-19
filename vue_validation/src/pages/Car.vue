@@ -27,6 +27,10 @@ export default {
         goBackToCars () {
             this.$router.push('/')
         }
+    },
+    beforeRouteLeave(to, from, next) {
+        confirm('Are you leaving?')
+        next(true)
     }
 }
 </script>
