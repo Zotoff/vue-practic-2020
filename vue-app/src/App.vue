@@ -55,8 +55,9 @@ export default {
       {text: 'Home', icon: 'fas fa-star', url: '/'},
       {text: 'Login', icon: 'fas fa-lock', url: '/login'},
       {text: 'Registration', icon: 'fas fa-user', url: '/registration'},
-      {text: 'Orders', icon: 'fas fa-shopping-cart', url: '/new'},
-      {text: 'My ads', icon: 'fas fa-list', url: '/list'}
+      {text: 'Orders', icon: 'fas fa-shopping-cart', url: '/order'},
+      {text: 'New Ad', icon: 'fas fa-shopping-cart', url: '/newad'},
+      {text: 'My ads', icon: 'fas fa-list', url: '/adlist'}
     ]
   })
 }

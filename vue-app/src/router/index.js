@@ -33,7 +33,7 @@ export default new Router({
       component: Registration
     },
     {
-      path: '/ad',
+      path: '/ad/:id',
       name: 'ad',
       component: Ad
     },

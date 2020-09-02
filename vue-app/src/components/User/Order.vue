@@ -1,120 +1,44 @@
 <template>
-     <v-card
-    max-width="475"
-    class="mx-auto"
-  >
-    <v-toolbar
-      color="teal"
-      dark
-    >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Settings</v-toolbar-title>
-    </v-toolbar>
-
-    <v-list two-line subheader>
-      <v-subheader>General</v-subheader>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Profile photo</v-list-item-title>
-          <v-list-item-subtitle>Change your Google+ profile photo</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Show your status</v-list-item-title>
-          <v-list-item-subtitle>Your status is visible to everyone</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-
-    <v-divider></v-divider>
-
-    <v-list
-      subheader
-      two-line
-      flat
-    >
-      <v-subheader>Hangout notifications</v-subheader>
-
-      <v-list-item-group
-        v-model="settings"
-        multiple
-      >
-        <v-list-item>
-          <template v-slot:default="{ active }">
-            <v-list-item-action>
-              <v-checkbox
-                :input-value="active"
-                color="primary"
-              ></v-checkbox>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>Notifications</v-list-item-title>
-              <v-list-item-subtitle>Allow notifications</v-list-item-subtitle>
+   <v-container>
+     <v-layout row>
+       <v-flex xs12 sm6 offset-sm3>
+         <h1 class="text--secondary">Orders</h1>
+         <v-list two-line subheader>
+           <v-list-item v-for="order in orders" :key="order.id">
+             <v-list-item-action>
+               <v-checkbox @change="markDone(order)" :input-value="order.done" color="success"></v-checkbox>
+             </v-list-item-action>
+             <v-list-item-content>
+              <v-list-item-title>{{order.name}}</v-list-item-title>
+              <v-list-item-subtitle>{{order.phone}}</v-list-item-subtitle>
             </v-list-item-content>
-          </template>
-        </v-list-item>
-
-        <v-list-item>
-          <template v-slot:default="{ active }">
             <v-list-item-action>
-              <v-checkbox
-                :input-value="active"
-                color="primary"
-              ></v-checkbox>
+              <v-btn class="primary" :to="'/ad/' + order.adId">Open</v-btn>
             </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>Sound</v-list-item-title>
-              <v-list-item-subtitle>Hangouts message</v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-        </v-list-item>
-
-        <v-list-item>
-          <template v-slot:default="{ active }">
-            <v-list-item-action>
-              <v-checkbox
-                :input-value="active"
-                color="primary"
-              ></v-checkbox>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>Video sounds</v-list-item-title>
-              <v-list-item-subtitle>Hangouts video call</v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-        </v-list-item>
-
-        <v-list-item>
-          <template v-slot:default="{ active }">
-            <v-list-item-action>
-              <v-checkbox
-                :input-value="active"
-                color="primary"
-              ></v-checkbox>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title>Invites</v-list-item-title>
-              <v-list-item-subtitle>Notify when receiving invites</v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
-  </v-card>
+           </v-list-item>
+        </v-list>
+       </v-flex>
+     </v-layout>
+   </v-container>
 </template>
 <script>
 export default {
   data () {
     return {
-
+      orders: [
+        {
+          id: 'fd33',
+          name: 'Paul',
+          phone: '89042543584',
+          adId: '123',
+          done: false
+        }
+      ]
+    }
+  },
+  methods: {
+    markDone (order) {
+      order.done = true
     }
   }
 }
