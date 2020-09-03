@@ -34,6 +34,7 @@ export default new Router({
     },
     {
       path: '/ad/:id',
+      props: true, // чтобы id передавался в свойства
       name: 'ad',
       component: Ad
     },

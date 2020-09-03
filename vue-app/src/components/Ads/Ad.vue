@@ -5,14 +5,14 @@
                 <h1>Ad</h1>
                 <v-card>
                   <v-img
-                    src="https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
+                    :src="ad.imageSrc"
                     height="300"
                   >
 
                   </v-img>
                   <v-card-text>
-                    <h1 class="text--primary">Lorem</h1>
-                    <p>Lorem</p>
+                    <h1 class="text--primary">{{ad.title}}</h1>
+                    <p>{{ad.description}}</p>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -26,9 +26,11 @@
 </template>
 <script>
 export default {
-  data () {
-    return {
-
+  props: ['id'], // забираем id как свойство
+  computed: {
+    ad () {
+      const id = this.id
+      return this.$store.getters.adById(id)
     }
   }
 }

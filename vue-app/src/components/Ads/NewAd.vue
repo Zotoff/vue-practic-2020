@@ -78,9 +78,11 @@ export default {
         const ad = {
           title: this.title,
           description: this.description,
-          promo: this.promo
+          promo: this.promo,
+          imageSrc: 'https://hackernoon.com/hn-images/1*nq9cdMxtdhQ0ZGL8OuSCUQ.jpeg'
         }
         console.log(ad)
+        this.$store.dispatch('createAd', ad)
       }
     }
   }

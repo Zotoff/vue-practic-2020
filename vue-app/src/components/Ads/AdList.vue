@@ -37,17 +37,10 @@
 </template>
 <script>
 export default {
-  data () {
-    return {
-      ads: [{
-        title: 'First add',
-        description: 'Hello, i am first add',
-        promo: false,
-        imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        id: '123'
-      }
-      ]
-    }
-  }
+ computed: {
+   ads () {
+     return this.$store.getters.ads
+   }
+ }
 }
 </script>
