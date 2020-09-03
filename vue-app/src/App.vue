@@ -20,6 +20,14 @@
             <v-list-item-title v-text="link.text"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="onLogout" v-if="isUserLoggedIn">
+          <v-list-item-icon>
+            <v-icon x-small left>fas fa-sign-out-alt</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title >Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
     </v-navigation-drawer>
@@ -36,11 +44,33 @@
           :to="link.url"
       >
         <v-btn :to="link.url"><v-icon x-small left>{{link.icon}}</v-icon>{{link.text}}</v-btn>
+        <v-btn @click="onLogout" text v-if="isUserLoggedIn"><v-icon x-small left>fas fa-sign-out-alt</v-icon> Logout</v-btn>
       </v-toolbar-items>
     </v-app-bar>
     <v-main>
         <router-view></router-view>
     </v-main>
+    <template v-if="error">
+      <v-snackbar
+      :multi-line="true"
+      :timeout="5000"
+      color="error"
+      @input="closeError"
+      :value="true"
+    >
+      {{error}}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="closeError"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    </template>
   </v-app>
 </template>
 
@@ -50,16 +80,39 @@ export default {
     source: String
   },
   data: () => ({
-    drawer: false,
-    links: [
-      {text: 'Home', icon: 'fas fa-star', url: '/'},
-      {text: 'Login', icon: 'fas fa-lock', url: '/login'},
-      {text: 'Registration', icon: 'fas fa-user', url: '/registration'},
-      {text: 'Orders', icon: 'fas fa-shopping-cart', url: '/order'},
-      {text: 'New Ad', icon: 'fas fa-shopping-cart', url: '/newad'},
-      {text: 'My ads', icon: 'fas fa-list', url: '/adlist'}
-    ]
-  })
+    drawer: false
+  }),
+  computed: {
+    error () {
+      return this.$store.getters.error
+    },
+    isUserLoggedIn () {
+      return this.$store.getters.isUserLoggedIn
+    },
+    links () {
+      if (this.isUserLoggedIn) {
+        return [
+          {text: 'Home', icon: 'fas fa-star', url: '/'},
+          {text: 'Orders', icon: 'fas fa-shopping-cart', url: '/order'},
+          {text: 'New Ad', icon: 'fas fa-shopping-cart', url: '/newad'},
+          {text: 'My ads', icon: 'fas fa-list', url: '/adlist'}
+        ]
+      } return [
+        {text: 'Home', icon: 'fas fa-star', url: '/'},
+        {text: 'Login', icon: 'fas fa-lock', url: '/login'},
+        {text: 'Registration', icon: 'fas fa-user', url: '/registration'}
+      ]
+    }
+  },
+  methods: {
+    closeError () {
+      this.$store.dispatch('clearError')
+    },
+    onLogout () {
+      this.$store.dispatch('logoutUser')
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 

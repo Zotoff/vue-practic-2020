@@ -28,6 +28,12 @@ new Vue({
       messagingSenderId: '1089394893420',
       appId: '1:1089394893420:web:9a16529f63ab6f2889ae49',
       measurementId: 'G-5CY34CE7JX'
-  })
-}
+    })
+    // Сохранение данных пользователя при регистрации
+    fb.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch('autoLoginUser', user)
+      }
+    })
+  }
 })

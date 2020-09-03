@@ -48,13 +48,13 @@
 <script>
 export default {
   computed: {
-   promoAds () {
-     return this.$store.getters.promoAds
-   },
-   ads () {
-     return this.$store.getters.ads
-   }
- }
+    promoAds () {
+      return this.$store.getters.promoAds
+    },
+    ads () {
+      return this.$store.getters.ads
+    }
+  }
 }
 </script>
 <style scoped>

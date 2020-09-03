@@ -37,10 +37,10 @@
 </template>
 <script>
 export default {
- computed: {
-   ads () {
-     return this.$store.getters.ads
-   }
- }
+  computed: {
+    ads () {
+      return this.$store.getters.ads
+    }
+  }
 }
 </script>

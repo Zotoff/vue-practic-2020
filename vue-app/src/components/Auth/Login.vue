@@ -59,7 +59,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="onSubmit" :disabled="!valid">Login</v-btn>
+                <v-btn color="primary" @click="onSubmit" :disabled="!valid || loading" :loading="loading">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -73,9 +73,10 @@ export default {
       email: '',
       password: '',
       form: '',
+      valid: false,
       emailRules: [
         value => !!value || 'E-mail is required.',
-        value => (value || '').length <= 20 || 'Max 20 characters',
+        value => (value || '').length >= 6 || 'Min 6 characters',
         value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
@@ -87,6 +88,11 @@ export default {
       ]
     }
   },
+  computed: {
+    loading () {
+      return this.$store.getters.loading
+    }
+  },
   methods: {
     onSubmit () {
       if (this.$refs.form.validate()) {
@@ -95,7 +101,17 @@ export default {
           password: this.password
         }
         console.log(user)
+        this.$store.dispatch('loginUser', user)
+          .then(() => {
+            this.$router.push('/')
+          })
+          .catch(err => console.log(err))
       }
+    }
+  },
+  created () {
+    if (this.$route.query['loginError']) {
+      this.$store.dispatch('setError', 'Please log in to access this page')
     }
   }
 }
