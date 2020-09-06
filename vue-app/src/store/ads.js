@@ -26,7 +26,6 @@ export default {
     async createAd ({commit, getters}, payload) {
       commit('clearError')
       commit('setLoading', true)
-
       const image = payload.image
       try {
         const newAd = new Ad(
@@ -36,7 +35,6 @@ export default {
           '',
           payload.promo
         )
-        console.log(getters)
         const ad = await fb.database().ref('ads').push(newAd)
         // Loading image extension
         const imageExt = image.name.slice(image.name.lastIndexOf('.'))

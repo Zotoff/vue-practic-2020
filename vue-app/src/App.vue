@@ -44,8 +44,8 @@
           :to="link.url"
       >
         <v-btn :to="link.url"><v-icon x-small left>{{link.icon}}</v-icon>{{link.text}}</v-btn>
-        <v-btn @click="onLogout" text v-if="isUserLoggedIn"><v-icon x-small left>fas fa-sign-out-alt</v-icon> Logout</v-btn>
       </v-toolbar-items>
+      <v-btn @click="onLogout" text v-if="isUserLoggedIn"><v-icon x-small left>fas fa-sign-out-alt</v-icon> Logout</v-btn>
     </v-app-bar>
     <v-main>
         <router-view></router-view>
