@@ -1,4 +1,6 @@
 import * as fb from 'firebase'
+import 'firebase/database'
+import 'firebase/storage'
 
 class Ad {
   constructor (title, description, ownerId, imageSrc = '', promo = false, id = null) {
@@ -13,6 +15,7 @@ class Ad {
 
 export default {
   state: {
+    ads: []
   },
   mutations: {
     createAd (state, payload) {
@@ -35,14 +38,31 @@ export default {
           '',
           payload.promo
         )
+        // Push the new ad to the database
         const ad = await fb.database().ref('ads').push(newAd)
-        // Loading image extension
+
+        if (ad) {
+          console.log('Pushing ad....')
+          console.log(newAd)
+        }
+
+        // Load the image extension
         const imageExt = image.name.slice(image.name.lastIndexOf('.'))
 
-        // Saving file in storage
-        const fileData = await fb.storage().ref(`/ads/${ad.key}.${imageExt}`).put(image)
-        const imageSrc = fileData.metadata.downloadURLs[0]
+        // Save the file in the local
+        const fileData = await fb.storage().ref(`ads/${ad.key}.${imageExt}`).put(image)
+        let imageSrc = ''
+        fileData.metadata.ref.getDownloadURL()
+          .then(src => {
+            console.log(src)
+            imageSrc = src
+          })
+        if (fileData) {
+          console.log('upload the image...')
+          console.log(imageSrc)
+        }
 
+        // Update the imageSrc in DB
         await fb.database().ref('ads').child(ad.key).update({
           imageSrc
         })

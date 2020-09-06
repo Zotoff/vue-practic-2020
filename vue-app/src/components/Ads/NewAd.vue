@@ -90,7 +90,6 @@ export default {
           promo: this.promo,
           image: this.image
         }
-        console.log(ad)
         this.$store.dispatch('createAd', ad)
           .then(() => {
             this.$router.push('/list')
