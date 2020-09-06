@@ -27,6 +27,7 @@
                     <v-btn
                       color="blue-grey"
                       class="ma-2 white--text warning"
+                      @click="triggerUpload"
                     >
                       Upload
                       <v-icon
@@ -36,11 +37,12 @@
                         mdi-cloud-upload
                       </v-icon>
                     </v-btn>
+                    <input ref="fileInput" type="file" style="display: none" accept="image/" @change="onFileChange"/>
                   </v-flex>
                 </v-layout>
                 <v-layout row>
                   <v-flex xs12>
-                     <img src="https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg" width="100%" height="auto" />
+                     <img :src="imageSrc" width="100%" height="auto" v-if="imageSrc" />
                   </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -55,7 +57,7 @@
                 <v-layout row>
                   <v-flex xs12>
                     <v-spacer></v-spacer>
-                    <v-btn :disabled="!valid || loading" :loading="loading" class='success' @click="createAd">Create Ad</v-btn>
+                    <v-btn :disabled="!valid || !image || loading" :loading="loading" class='success' @click="createAd">Create Ad</v-btn>
                   </v-flex>
                 </v-layout>
             </v-flex>
@@ -69,7 +71,9 @@ export default {
       title: '',
       description: '',
       promo: false,
-      valid: false
+      valid: false,
+      image: null,
+      imageSrc: ''
     }
   },
   computed: {
@@ -79,20 +83,32 @@ export default {
   },
   methods: {
     createAd () {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() && this.image) {
         const ad = {
           title: this.title,
           description: this.description,
           promo: this.promo,
-          imageSrc: 'https://hackernoon.com/hn-images/1*nq9cdMxtdhQ0ZGL8OuSCUQ.jpeg'
+          image: this.image
         }
         console.log(ad)
         this.$store.dispatch('createAd', ad)
-        .then(() => {
-          this.$router.push('/list')
-        })
-        .catch(() => {})
+          .then(() => {
+            this.$router.push('/list')
+          })
+          .catch(() => {})
       }
+    },
+    triggerUpload () {
+      this.$refs.fileInput.click()
+    },
+    onFileChange (event) {
+      const file = event.target.files[0]
+      const reader = new FileReader()
+      reader.onload = e => {
+        this.imageSrc = reader.result
+      }
+      reader.readAsDataURL(file)
+      this.image = file
     }
   }
 }

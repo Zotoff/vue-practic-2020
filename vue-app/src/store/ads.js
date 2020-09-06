@@ -1,4 +1,4 @@
-import * as firebase from 'firebase'
+import * as fb from 'firebase'
 
 class Ad {
   constructor (title, description, ownerId, imageSrc = '', promo = false, id = null) {
@@ -13,10 +13,6 @@ class Ad {
 
 export default {
   state: {
-    ads: [
-     
-    ]
-
   },
   mutations: {
     createAd (state, payload) {
@@ -30,20 +26,34 @@ export default {
     async createAd ({commit, getters}, payload) {
       commit('clearError')
       commit('setLoading', true)
+
+      const image = payload.image
       try {
         const newAd = new Ad(
           payload.title,
           payload.description,
           getters.user.id,
-          payload.imageSrc,
+          '',
           payload.promo
         )
         console.log(getters)
-        const ad = await firebase.database().ref('ads').push(newAd)
+        const ad = await fb.database().ref('ads').push(newAd)
+        // Loading image extension
+        const imageExt = image.name.slice(image.name.lastIndexOf('.'))
+
+        // Saving file in storage
+        const fileData = await fb.storage().ref(`/ads/${ad.key}.${imageExt}`).put(image)
+        const imageSrc = fileData.metadata.downloadURLs[0]
+
+        await fb.database().ref('ads').child(ad.key).update({
+          imageSrc
+        })
+
         commit('setLoading', false)
         commit('createAd', {
           ...newAd,
-          id: ad.key
+          id: ad.key,
+          imageSrc
         })
       } catch (error) {
         commit('setError', error.message)
@@ -59,9 +69,8 @@ export default {
       const resultAds = []
 
       try {
-        const fbVal = await firebase.database.ref('ads').once('value')
+        const fbVal = await fb.database().ref('ads').once('value')
         const ads = fbVal.val()
-
         Object.keys(ads).forEach(key => {
           const ad = ads[key]
           resultAds.push(
@@ -70,7 +79,7 @@ export default {
         })
         commit('loadAds', resultAds)
         commit('setLoading', false)
-      } catch(error) {
+      } catch (error) {
         commit('setError', error.message)
         commit('setLoading', false)
         console.log(error.stack)
