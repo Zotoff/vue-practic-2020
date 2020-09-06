@@ -1,32 +1,81 @@
+import * as firebase from 'firebase'
+
+class Ad {
+  constructor (title, description, ownerId, imageSrc = '', promo = false, id = null) {
+    this.title = title
+    this.description = description
+    this.ownerId = ownerId
+    this.imageSrc = imageSrc
+    this.promo = promo
+    this.id = id
+  }
+}
+
 export default {
   state: {
     ads: [
-      {
-        title: 'First add',
-        description: 'Hello, i am first add',
-        promo: false,
-        imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        id: '123'
-      },
-      {
-        title: 'Second add',
-        description: 'Hello, i am second add',
-        promo: true,
-        imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-        id: '12346'
-      }
+     
     ]
 
   },
   mutations: {
     createAd (state, payload) {
       state.ads.push(payload)
+    },
+    loadAds (state, payload) {
+      state.ads = payload
     }
   },
   actions: {
-    createAd ({commit}, payload) {
-      payload.id = Math.random()
-      commit('createAd', payload)
+    async createAd ({commit, getters}, payload) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        const newAd = new Ad(
+          payload.title,
+          payload.description,
+          getters.user.id,
+          payload.imageSrc,
+          payload.promo
+        )
+        console.log(getters)
+        const ad = await firebase.database().ref('ads').push(newAd)
+        commit('setLoading', false)
+        commit('createAd', {
+          ...newAd,
+          id: ad.key
+        })
+      } catch (error) {
+        commit('setError', error.message)
+        commit('setLoading', false)
+        console.log(error.stack)
+        throw error
+      }
+    },
+    async fetchAds ({commit}) {
+      commit('clearError')
+      commit('setLoading', true)
+
+      const resultAds = []
+
+      try {
+        const fbVal = await firebase.database.ref('ads').once('value')
+        const ads = fbVal.val()
+
+        Object.keys(ads).forEach(key => {
+          const ad = ads[key]
+          resultAds.push(
+            new Ad(ad.title, ad.desciption, ad.ownerId, ad.imageSrc, ad.promo, key)
+          )
+        })
+        commit('loadAds', resultAds)
+        commit('setLoading', false)
+      } catch(error) {
+        commit('setError', error.message)
+        commit('setLoading', false)
+        console.log(error.stack)
+        throw error
+      }
     }
   },
   getters: {

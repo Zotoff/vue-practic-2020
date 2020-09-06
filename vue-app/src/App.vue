@@ -7,7 +7,7 @@
     >
     <v-list dense>
       <v-subheader>Vue application</v-subheader>
-      <v-list-item-group v-model="links" color="primary">
+      <v-list-item-group color="primary">
         <v-list-item
           v-for="(link) in links"
           :key="link.title"
