@@ -51,28 +51,24 @@ export default {
 
         // Save the file in the local
         const fileData = await fb.storage().ref(`ads/${ad.key}.${imageExt}`).put(image)
-        let imageSrc = ''
+
         fileData.metadata.ref.getDownloadURL()
           .then(src => {
             console.log(src)
-            imageSrc = src
+            let imageSrc = src
+
+            // Update the imageSrc in DB
+            fb.database().ref('ads').child(ad.key).update({
+              imageSrc
+            })
+
+            commit('setLoading', false)
+            commit('createAd', {
+              ...newAd,
+              id: ad.key,
+              imageSrc
+            })
           })
-        if (fileData) {
-          console.log('upload the image...')
-          console.log(imageSrc)
-        }
-
-        // Update the imageSrc in DB
-        await fb.database().ref('ads').child(ad.key).update({
-          imageSrc
-        })
-
-        commit('setLoading', false)
-        commit('createAd', {
-          ...newAd,
-          id: ad.key,
-          imageSrc
-        })
       } catch (error) {
         commit('setError', error.message)
         commit('setLoading', false)

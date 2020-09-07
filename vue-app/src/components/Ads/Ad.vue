@@ -16,7 +16,7 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn class="warning" flat>Edit</v-btn>
+                    <addEditAdModal></addEditAdModal>
                     <v-btn class="success">Buy</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -25,6 +25,7 @@
     </v-container>
 </template>
 <script>
+import EditAdModal from './editAdModal'
 export default {
   props: ['id'], // забираем id как свойство
   computed: {
@@ -32,6 +33,9 @@ export default {
       const id = this.id
       return this.$store.getters.adById(id)
     }
+  },
+  components: {
+    addEditAdModal: EditAdModal
   }
 }
 </script>
